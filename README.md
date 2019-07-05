@@ -1,5 +1,6 @@
 # hiv_custom_sequencelogo
-create a custom sequence logo from a fasta file and a list of sites to use
+This script is designed to take a full gene (or partial gene) alignment of HIV sequences (must include HXB2) and create a custom sequence logo using a list of sites provided in a csv file
+
 
 # Requirements
 python v3.6>
