@@ -113,8 +113,8 @@ def main(path_to_weblogo, path, sites_of_interest, fasta_file, start,  title, x_
     fasta_file = pathlib.Path(fasta_file).absolute()
     sites_of_interest = pathlib.Path(sites_of_interest).absolute()
     name = fasta_file.stem + f"_for_logo.fasta"
-    outfile = pathlib.Path(outpath, name)
-
+    fasta_outfile = pathlib.Path(outpath, name)
+    logo_outfile = pathlib.Path(outpath, name.replace(".fasta", ""))
     if path_to_weblogo == "":
         print("no path specified for weblogo, will assume that it is in your $PATH\n")
         weblogo_path = ""
@@ -167,7 +167,7 @@ def main(path_to_weblogo, path, sites_of_interest, fasta_file, start,  title, x_
             collected_sites_d[seq_name].append(seq[idx])
 
     # write out the collected sites as a new fasta file
-    with open(outfile, 'w') as fh:
+    with open(fasta_outfile, 'w') as fh:
         for collected_name, collected_sites_list in collected_sites_d.items():
             sites_to_use = "".join(collected_sites_list)
             fh.write(f">{collected_name}\n{sites_to_use}\n")
@@ -177,8 +177,8 @@ def main(path_to_weblogo, path, sites_of_interest, fasta_file, start,  title, x_
     
     color_scheme = ["chemistry", "charge", "monochrome", "classic", "hydrophobicity", "base pairing"]
 
-    web_logo_cmd = f"{path_to_weblogo_install} --fin {outfile} --datatype fasta " \
-        f"--fout {outfile}.png --format png --sequence-type protein --units probability --size large " \
+    web_logo_cmd = f"{path_to_weblogo_install} --fin {fasta_outfile} --datatype fasta " \
+        f"--fout {logo_outfile}.png --format png --sequence-type protein --units probability --size large " \
         f"--title '{title}' --xlabel '{x_label}' --annotate '{sites}' --ylabel 'Frequency' " \
         f"--color-scheme '{color_scheme[0]}' --fontsize 12  --title-fontsize 14 --text-font ArialMT " \
         f"--logo-font ArialMT --title-font ArialMT --resolution 600"
@@ -203,13 +203,13 @@ if __name__ == "__main__":
     parser.add_argument('-in', '--sites_of_interest', type=str, default=None, required=False,
                         help='The path and file name of the csv file with neut data from lanl')
     parser.add_argument('-f', '--fasta_file', required=False, type=str,
-                        help='The path and name of the fasta file of virus sequences')
+                        help='The path and name of the aligned and translated fasta file of virus sequences')
     parser.add_argument('-s', '--start', default=1, type=int,
-                        help='the HXB2 start position of your alignment', required=False)
+                        help='the HXB2 gene start position of your alignment', required=False)
     parser.add_argument('-t', '--title', default="", type=str,
-                        help='the title for the sequence logo', required=False)
+                        help='the title for the sequence logo. eg: "Global HIV ENV C3"', required=False)
     parser.add_argument('-x', '--x_label', default="Position (HXB2 numbering)", type=str,
-                        help='the x-axis label for the sequence logo', required=False)
+                        help='the x-axis label for the sequence logo. eg: "N332-V3 Supersite"', required=False)
 
     args = parser.parse_args()
     path_to_weblogo = args.path_to_weblogo
