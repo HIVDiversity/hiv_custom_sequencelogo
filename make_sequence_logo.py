@@ -96,7 +96,7 @@ def posnumcalc(hxb2seq, start):
     return pos_num
 
 
-def main(path_to_weblogo, path, sites_of_interest, fasta_file, start,  title, x_label):
+def main(path_to_weblogo, path, sites_of_interest, fasta_file, start, color_scheme, title, x_label):
     """
     make a sequence logo from an aligned fasta file (with HXB2) and a csv file with a list of sites
     :param path_to_weblogo: (str) The path to where weblogo was installed, eg "~/anaconda3/bin/weblogo"
@@ -104,6 +104,7 @@ def main(path_to_weblogo, path, sites_of_interest, fasta_file, start,  title, x_
     :param sites_of_interest: (str) csv file. column heading 'sites' with the positions to use in this column
     :param fasta_file: (str) the path and name of the fasta file with your virus sequences (include hxb2)
     :param start: (int) hxb2 start position of alignment
+    :param color_scheme: (str) the name of the color scheme to use for the logo
     :param title: (str) the title for the sequence logo
     :param x_label: (str) the x-axis label for the sequence logo
     :returns: a fasta file with the sites used to make the logo, a png file of the sequence logo
@@ -174,13 +175,11 @@ def main(path_to_weblogo, path, sites_of_interest, fasta_file, start,  title, x_
 
     sites = ','.join([str(int(x)) for x in sites_list])
     path_to_weblogo_install = pathlib.Path(weblogo_path, "weblogo")
-    
-    color_scheme = ["chemistry", "charge", "monochrome", "classic", "hydrophobicity", "base pairing"]
 
     web_logo_cmd = f"{path_to_weblogo_install} --fin {fasta_outfile} --datatype fasta " \
         f"--fout {logo_outfile}.png --format png --sequence-type protein --units probability --size large " \
         f"--title '{title}' --xlabel '{x_label}' --annotate '{sites}' --ylabel 'Frequency' " \
-        f"--color-scheme '{color_scheme[0]}' --fontsize 12  --title-fontsize 14 --text-font ArialMT " \
+        f"--color-scheme {color_scheme} --fontsize 12  --title-fontsize 14 --text-font ArialMT " \
         f"--logo-font ArialMT --title-font ArialMT --resolution 600"
     try:
         subprocess.call(web_logo_cmd, shell=True)
@@ -206,6 +205,10 @@ if __name__ == "__main__":
                         help='The path and name of the aligned and translated fasta file of virus sequences')
     parser.add_argument('-s', '--start', default=1, type=int,
                         help='the HXB2 gene start position of your alignment', required=False)
+    parser.add_argument('-c', '--color_scheme', default="chemistry", choices=["chemistry", "charge", "monochrome",
+                                                                              "classic", "hydrophobicity",
+                                                                              "base pairing"], type=str,
+                        help='The color scheme for the sequence logo', required=False)
     parser.add_argument('-t', '--title', default="", type=str,
                         help='the title for the sequence logo. eg: "Global HIV ENV C3"', required=False)
     parser.add_argument('-x', '--x_label', default="Position (HXB2 numbering)", type=str,
@@ -217,7 +220,8 @@ if __name__ == "__main__":
     sites_of_interest = args.sites_of_interest
     fasta_file = args.fasta_file
     start = args.start
+    color_scheme = args.color_scheme
     title = args.title
     x_label = args.x_label
 
-    main(path_to_weblogo, outpath, sites_of_interest, fasta_file, start, title, x_label)
+    main(path_to_weblogo, outpath, sites_of_interest, fasta_file, start, color_scheme, title, x_label)
