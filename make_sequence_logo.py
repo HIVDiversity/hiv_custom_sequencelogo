@@ -101,7 +101,7 @@ def main(path_to_weblogo, path, sites_of_interest, fasta_file, start, color_sche
     make a sequence logo from an aligned fasta file (with HXB2) and a csv file with a list of sites
     :param path_to_weblogo: (str) The path to where weblogo was installed, eg "~/anaconda3/bin/weblogo"
     :param path: (str) path to where the output should be written
-    :param sites_of_interest: (str) csv file. column heading 'sites' with the positions to use in this column
+    :param sites_of_interest: (str) csv file.  with the positions to use in this column
     :param fasta_file: (str) the path and name of the fasta file with your virus sequences (include hxb2)
     :param start: (int) hxb2 start position of alignment
     :param color_scheme: (str) the name of the color scheme to use for the logo
@@ -200,7 +200,7 @@ if __name__ == "__main__":
     parser.add_argument('-o', '--outpath', type=str, required=True,
                         help='The path to the project folder, where the folders will be created')
     parser.add_argument('-in', '--sites_of_interest', type=str, default=None, required=False,
-                        help='The path and file name of the csv file with neut data from lanl')
+                        help='The path and file name of the csv file with sites to inclue in column with heading "sites"')
     parser.add_argument('-f', '--fasta_file', required=False, type=str,
                         help='The path and name of the aligned and translated fasta file of virus sequences')
     parser.add_argument('-s', '--start', default=1, type=int,
