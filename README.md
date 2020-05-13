@@ -15,3 +15,6 @@ conda install -c bioconda weblogo
 
     * This file must contain the column heading "sites"
 
+to run:
+
+    python make_sequence_logo.py -in <csv file with sites to include> -o /path/to/outfile/ -f <aligned_AA.fasta> -s <start position for HXB2> -c <color scheme> -t <a title> -x <x-axis label>
